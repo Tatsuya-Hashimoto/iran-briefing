@@ -24,11 +24,10 @@
       --border: rgba(255,255,255,0.07);
       --text: #e2e8f0;
       --muted: #64748b;
-      --accent: #c0392b;
-      --accent2: #63b3ed;
       --red: #ef4444;
       --yellow: #f59e0b;
       --green: #22c55e;
+      --accent2: #63b3ed;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -42,46 +41,135 @@
       overflow-x: hidden;
     }
 
+    /* ── Settings Overlay ── */
+    .settings-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      backdrop-filter: blur(4px);
+    }
+    .settings-overlay.hidden { display: none; }
+
+    .settings-card {
+      background: #111827;
+      border: 1px solid rgba(245,158,11,0.45);
+      border-radius: 20px;
+      padding: 28px 24px 24px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+    }
+
+    .settings-icon { font-size: 38px; text-align: center; margin-bottom: 10px; }
+    .settings-title { font-size: 18px; font-weight: 800; color: #fff; text-align: center; margin-bottom: 6px; }
+    .settings-desc {
+      font-size: 12px; color: var(--muted); text-align: center;
+      line-height: 1.7; margin-bottom: 22px;
+    }
+
+    .settings-section-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 1px;
+      color: var(--muted); text-transform: uppercase; margin-bottom: 8px;
+    }
+
+    .key-input-wrap { position: relative; margin-bottom: 10px; }
+    .key-input {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      padding: 13px 44px 13px 14px;
+      color: #e2e8f0;
+      font-size: 13px;
+      font-family: 'Courier New', monospace;
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+    .key-input:focus { border-color: rgba(245,158,11,0.55); }
+    .key-input::placeholder { color: #334155; font-family: 'Noto Sans JP', sans-serif; }
+    .key-input.error { border-color: var(--red); }
+
+    .key-eye-btn {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: var(--muted);
+      cursor: pointer; font-size: 17px; padding: 4px; line-height: 1;
+    }
+
+    .key-status-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 18px; min-height: 18px;
+    }
+    .key-status { font-size: 11px; color: var(--muted); }
+    .key-status.ok { color: var(--green); }
+    .key-status.ng { color: #94a3b8; }
+    .key-clear-btn {
+      font-size: 11px; color: #ef4444; background: none; border: none;
+      cursor: pointer; padding: 0; font-family: 'Noto Sans JP', sans-serif;
+      text-decoration: underline;
+    }
+
+    .settings-save-btn {
+      width: 100%; padding: 14px;
+      background: linear-gradient(135deg, #c0392b, #922b21);
+      border: none; border-radius: 10px; color: #fff;
+      font-size: 15px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif;
+      cursor: pointer; margin-bottom: 14px; -webkit-appearance: none;
+      box-shadow: 0 4px 16px rgba(192,57,43,0.4);
+      transition: opacity 0.15s;
+    }
+    .settings-save-btn:active { opacity: 0.8; }
+
+    .settings-note {
+      font-size: 11px; color: #334155; text-align: center; line-height: 1.6;
+    }
+    .settings-note a { color: #475569; }
+
+    /* ── Header ── */
     .header {
       background: linear-gradient(135deg, #0f1f3d 0%, #1a0a0a 100%);
       border-bottom: 1px solid rgba(239,68,68,0.3);
-      padding: env(safe-area-inset-top, 44px) 20px 16px;
+      padding: env(safe-area-inset-top, 44px) 56px 16px;
       text-align: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      position: sticky; top: 0; z-index: 100;
     }
     .header-label { font-size: 10px; letter-spacing: 4px; color: var(--red); font-weight: 800; text-transform: uppercase; margin-bottom: 4px; }
     .header-title { font-size: 18px; font-weight: 800; color: #fff; letter-spacing: 0.5px; }
     .header-sub { font-size: 10px; color: var(--muted); margin-top: 4px; }
 
+    .gear-btn {
+      position: absolute; right: 14px;
+      top: calc(env(safe-area-inset-top, 44px) + 14px);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 9px; color: var(--muted);
+      font-size: 16px; padding: 7px 9px; cursor: pointer;
+      -webkit-appearance: none; line-height: 1;
+      transition: background 0.2s;
+    }
+    .gear-btn:active { background: rgba(255,255,255,0.12); }
+
+    /* ── Main ── */
     .main {
       padding: 16px;
       padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 20px);
-      max-width: 600px;
-      margin: 0 auto;
+      max-width: 600px; margin: 0 auto;
     }
 
     .fetch-btn {
-      width: 100%;
-      padding: 16px;
+      width: 100%; padding: 16px;
       background: linear-gradient(135deg, #c0392b, #922b21);
-      border: none;
-      border-radius: 14px;
-      color: #fff;
-      font-size: 16px;
-      font-weight: 700;
-      font-family: 'Noto Sans JP', sans-serif;
-      letter-spacing: 0.5px;
-      cursor: pointer;
-      margin-bottom: 16px;
+      border: none; border-radius: 14px; color: #fff;
+      font-size: 16px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif;
+      letter-spacing: 0.5px; cursor: pointer; margin-bottom: 16px;
       box-shadow: 0 4px 24px rgba(192,57,43,0.45);
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      -webkit-appearance: none;
+      transition: all 0.2s; display: flex; align-items: center;
+      justify-content: center; gap: 10px; -webkit-appearance: none;
     }
     .fetch-btn:active { transform: scale(0.97); box-shadow: none; }
     .fetch-btn:disabled { background: #1e293b; box-shadow: none; cursor: not-allowed; }
@@ -117,19 +205,12 @@
 
     /* ── 物流リスクセクション ── */
     .lr-wrap { margin-bottom: 12px; }
-
     .lr-toggle {
-      width: 100%;
-      background: linear-gradient(135deg, #0d2137 0%, #1b1400 100%);
-      border: 1px solid rgba(245,158,11,0.28);
-      border-radius: 12px;
-      padding: 14px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      font-family: 'Noto Sans JP', sans-serif;
-      -webkit-appearance: none;
+      width: 100%; background: linear-gradient(135deg, #0d2137 0%, #1b1400 100%);
+      border: 1px solid rgba(245,158,11,0.28); border-radius: 12px;
+      padding: 14px 16px; display: flex; align-items: center;
+      justify-content: space-between; cursor: pointer;
+      font-family: 'Noto Sans JP', sans-serif; -webkit-appearance: none;
       transition: border-radius 0.2s;
     }
     .lr-toggle.open { border-radius: 12px 12px 0 0; border-bottom-color: transparent; }
@@ -137,54 +218,86 @@
     .lr-toggle-left { display: flex; align-items: center; gap: 10px; }
     .lr-toggle-title { font-size: 13px; font-weight: 700; color: #e2e8f0; }
     .lr-score-badge { border-radius: 6px; padding: 3px 9px; font-size: 10px; font-weight: 800; color: #fff; letter-spacing: 0.5px; }
-    .lr-chevron { color: #64748b; font-size: 11px; transition: transform 0.25s; }
+    .lr-chevron { color: var(--muted); font-size: 11px; transition: transform 0.25s; }
     .lr-chevron.open { transform: rotate(180deg); }
-
     .lr-body { background: var(--surface2); border: 1px solid rgba(245,158,11,0.15); border-top: none; border-radius: 0 0 12px 12px; padding: 14px 16px; display: none; }
     .lr-body.open { display: block; }
-
     .lr-label { font-size: 10px; color: var(--muted); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin: 14px 0 7px; }
     .lr-label:first-child { margin-top: 0; }
-
     .gauge-track { background: rgba(255,255,255,0.08); border-radius: 4px; height: 8px; }
     .gauge-fill { height: 8px; border-radius: 4px; transition: width 0.7s ease; }
     .gauge-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; font-size: 11px; }
-
     .factor-row { margin-bottom: 9px; }
     .factor-header { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #94a3b8; margin-bottom: 4px; }
     .factor-val { color: #e2e8f0; font-weight: 600; }
     .fbar-track { background: rgba(255,255,255,0.06); border-radius: 3px; height: 5px; }
     .fbar-fill { height: 5px; border-radius: 3px; transition: width 0.6s ease; }
-
     .region-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 12px; }
     .region-row:last-child { border-bottom: none; }
     .region-name { color: #94a3b8; }
     .region-right { display: flex; align-items: center; gap: 8px; }
     .region-score { color: #e2e8f0; font-weight: 700; font-size: 13px; min-width: 38px; text-align: right; }
     .region-badge { border-radius: 4px; padding: 2px 7px; font-size: 9px; font-weight: 800; color: #fff; letter-spacing: 0.3px; }
-
     .cost-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .cost-item { background: rgba(255,255,255,0.04); border-radius: 8px; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.05); }
     .cost-item.hl { border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.06); }
     .cost-label { font-size: 9px; color: var(--muted); letter-spacing: 0.5px; margin-bottom: 5px; text-transform: uppercase; }
     .cost-val { font-size: 15px; font-weight: 700; color: #e2e8f0; }
     .cost-sub { font-size: 10px; margin-top: 3px; }
-
     .mit-item { display: flex; gap: 8px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 12px; color: #94a3b8; line-height: 1.55; }
     .mit-item:last-child { border-bottom: none; }
     .mit-num { color: var(--yellow); font-weight: 700; min-width: 20px; flex-shrink: 0; }
-
     .lr-rationale { font-size: 12px; color: #64748b; line-height: 1.65; font-style: italic; background: rgba(255,255,255,0.03); border-radius: 8px; padding: 10px 12px; }
   </style>
 </head>
 <body>
 
+  <!-- ── APIキー設定オーバーレイ ── -->
+  <div class="settings-overlay hidden" id="settings-overlay">
+    <div class="settings-card">
+      <div class="settings-icon">🔑</div>
+      <div class="settings-title">Anthropic APIキー設定</div>
+      <div class="settings-desc">
+        Anthropic APIキーを入力してください。<br>
+        キーはこのデバイスのみに保存されます。
+      </div>
+
+      <div class="settings-section-label">APIキーを入力</div>
+      <div class="key-input-wrap">
+        <input
+          type="password"
+          class="key-input"
+          id="api-key-input"
+          placeholder="sk-ant-api03-..."
+          autocomplete="off"
+          autocorrect="off"
+          spellcheck="false"
+        />
+        <button class="key-eye-btn" id="key-eye-btn" onclick="toggleKeyVisibility()" type="button">👁️</button>
+      </div>
+      <div class="key-status-row">
+        <span class="key-status ng" id="key-status">未設定</span>
+        <button class="key-clear-btn" id="key-clear-btn" onclick="clearKey()" type="button" style="display:none">削除</button>
+      </div>
+
+      <button class="settings-save-btn" onclick="saveAndClose()">保存して開始</button>
+
+      <div class="settings-note">
+        キーは <code style="color:#475569">localStorage</code> に保存されます（個人端末専用）。<br>
+        APIキーは <a href="https://console.anthropic.com/" target="_blank" rel="noopener">console.anthropic.com</a> で取得できます。
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Header ── -->
   <div class="header">
     <div class="header-label">Daily Intelligence Briefing</div>
     <div class="header-title">イラン戦況 × ドル円 モニター</div>
     <div class="header-sub" id="last-fetched">未取得</div>
+    <button class="gear-btn" onclick="showSettings()" title="APIキー設定">⚙️</button>
   </div>
 
+  <!-- ── Main ── -->
   <div class="main">
     <button class="fetch-btn" id="fetch-btn" onclick="fetchBriefing()">
       📡 最新ブリーフィングを取得
@@ -209,6 +322,81 @@
   <div class="footer">For Personal Use · Hashim Iran Briefing Monitor</div>
 
   <script>
+    // ── APIキー管理 ────────────────────────────────────────────────────────────
+    const KEY_STORAGE = 'iran_briefing_api_key';
+
+    function loadApiKey() { return localStorage.getItem(KEY_STORAGE) || ''; }
+    function saveApiKey(key) { localStorage.setItem(KEY_STORAGE, key.trim()); }
+    function deleteApiKey() { localStorage.removeItem(KEY_STORAGE); }
+
+    function maskKey(key) {
+      if (!key || key.length < 10) return key;
+      return key.slice(0, 10) + '••••••••' + key.slice(-4);
+    }
+
+    function showSettings() {
+      const key = loadApiKey();
+      const statusEl = document.getElementById('key-status');
+      const clearBtn = document.getElementById('key-clear-btn');
+      if (key) {
+        statusEl.textContent = '保存済み: ' + maskKey(key);
+        statusEl.className = 'key-status ok';
+        clearBtn.style.display = 'block';
+      } else {
+        statusEl.textContent = '未設定';
+        statusEl.className = 'key-status ng';
+        clearBtn.style.display = 'none';
+      }
+      document.getElementById('api-key-input').value = '';
+      document.getElementById('settings-overlay').classList.remove('hidden');
+      setTimeout(() => document.getElementById('api-key-input').focus(), 100);
+    }
+
+    function hideSettings() {
+      document.getElementById('settings-overlay').classList.add('hidden');
+    }
+
+    function saveAndClose() {
+      const input = document.getElementById('api-key-input');
+      const key = input.value.trim();
+      if (!key) {
+        input.classList.add('error');
+        setTimeout(() => input.classList.remove('error'), 1500);
+        return;
+      }
+      if (!key.startsWith('sk-')) {
+        input.classList.add('error');
+        document.getElementById('key-status').textContent = 'キーは sk- で始まる必要があります';
+        document.getElementById('key-status').className = 'key-status';
+        setTimeout(() => input.classList.remove('error'), 1500);
+        return;
+      }
+      saveApiKey(key);
+      hideSettings();
+    }
+
+    function clearKey() {
+      deleteApiKey();
+      document.getElementById('key-status').textContent = '未設定';
+      document.getElementById('key-status').className = 'key-status ng';
+      document.getElementById('key-clear-btn').style.display = 'none';
+      document.getElementById('api-key-input').value = '';
+      document.getElementById('api-key-input').focus();
+    }
+
+    function toggleKeyVisibility() {
+      const input = document.getElementById('api-key-input');
+      const btn = document.getElementById('key-eye-btn');
+      if (input.type === 'password') { input.type = 'text';     btn.textContent = '🙈'; }
+      else                           { input.type = 'password'; btn.textContent = '👁️'; }
+    }
+
+    // Enterキーで保存
+    document.getElementById('api-key-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') saveAndClose();
+    });
+
+    // ── 物流リスクエンジン ──────────────────────────────────────────────────
     const ANTHROPIC_API = "https://api.anthropic.com/v1/messages";
 
     const SYSTEM_PROMPT = `あなたはプロの地政学・金融・物流リスクアナリストです。以下のルールで毎朝のブリーフィングを作成してください。
@@ -252,7 +440,6 @@
       LOW:    { color: "#22c55e", label: "✅ 低リスク", bg: "rgba(34,197,94,0.12)",  border: "#22c55e" },
     };
 
-    // ── 物流リスクエンジン ──────────────────────────────────────────────────
     const FACTOR_W = {
       military_activity:    { label: "軍事活動・作戦行動",    weight: 0.30 },
       sanctions_intensity:  { label: "制裁強度",             weight: 0.25 },
@@ -284,48 +471,30 @@
       const factors = [];
       for (const [key, cfg] of Object.entries(FACTOR_W)) {
         const s = Math.min(Math.max(+(lr[key] || 0), 0), 10);
-        const w = Math.round(s * cfg.weight * 10 * 10) / 10;
-        hScore += w;
+        hScore += Math.round(s * cfg.weight * 10 * 10) / 10;
         factors.push({ label: cfg.label, score: s, pct: s * 10 });
       }
       hScore = Math.round(hScore * 10) / 10;
       const mult = +(1.0 + (hScore / 100) * 1.5).toFixed(3);
-
       const regions = REGION_RATIOS.map(r => {
         const s = Math.min(Math.round(hScore * r.ratio * mult * 10) / 10, 100);
         return { name: r.name, score: s, rc: getRC(s) };
       });
-
       const oil = +(lr.oil_price_usd || BASE_OIL);
       const wp  = +(lr.war_risk_premium || 0);
       const oilPct     = (oil - BASE_OIL) / BASE_OIL * 100;
       const freightPct = oilPct * OIL_CORR;
       const freight    = Math.round(BASE_FREIGHT * (1 + freightPct / 100));
       const costIdx    = Math.round((100 + freightPct * 0.5 + wp * 200) * 10) / 10;
-
       return { hScore, factors, mult, regions, oil, oilPct, freight, freightPct, wpPct: wp * 100, costIdx,
                mitigation: buildMitigation(hScore) };
     }
 
     function buildMitigation(s) {
-      const a = [
-        "積荷保険の保険条件・除外事項を再確認する",
-        "主要バイヤー・サプライヤーへのリスク状況を共有する",
-      ];
-      if (s >= 30) a.push(
-        "喜望峰迂回ルートの費用・日程を試算する",
-        "戦争リスク保険（War Risk Premium）の追加手配を検討する",
-        "予備調達先（UAEまたは東南アジア経由）をリストアップする"
-      );
-      if (s >= 60) a.push(
-        "既存LCの延長・期限変更をバイヤーと事前協議する",
-        "FOB条件からCIF/DAPへの条件変更を検討する",
-        "プラント納期への影響をエンドユーザーへ事前通知する"
-      );
-      if (s >= 80) a.push(
-        "ホルムズ経由貨物の出荷を一時停止し代替手配を優先する",
-        "フォースマジュール条項の適用可否を法務確認する"
-      );
+      const a = ["積荷保険の保険条件・除外事項を再確認する","主要バイヤー・サプライヤーへのリスク状況を共有する"];
+      if (s >= 30) a.push("喜望峰迂回ルートの費用・日程を試算する","戦争リスク保険（War Risk Premium）の追加手配を検討する","予備調達先（UAEまたは東南アジア経由）をリストアップする");
+      if (s >= 60) a.push("既存LCの延長・期限変更をバイヤーと事前協議する","FOB条件からCIF/DAPへの条件変更を検討する","プラント納期への影響をエンドユーザーへ事前通知する");
+      if (s >= 80) a.push("ホルムズ経由貨物の出荷を一時停止し代替手配を優先する","フォースマジュール条項の適用可否を法務確認する");
       return a;
     }
 
@@ -334,37 +503,17 @@
       const rc = getRC(d.hScore);
       const sg = v => v >= 0 ? "+" : "";
       const rg = v => v >= 0 ? "#ef4444" : "#22c55e";
-
       const factorsHtml = d.factors.map(f => {
         const fc = getRC(f.pct);
-        return `<div class="factor-row">
-          <div class="factor-header">
-            <span>${f.label}</span>
-            <span class="factor-val">${f.score.toFixed(1)} / 10</span>
-          </div>
-          <div class="fbar-track">
-            <div class="fbar-fill" style="width:${f.pct}%;background:${fc.color}"></div>
-          </div>
-        </div>`;
+        return `<div class="factor-row"><div class="factor-header"><span>${f.label}</span><span class="factor-val">${f.score.toFixed(1)} / 10</span></div><div class="fbar-track"><div class="fbar-fill" style="width:${f.pct}%;background:${fc.color}"></div></div></div>`;
       }).join("");
-
       const regionsHtml = d.regions.map(r =>
-        `<div class="region-row">
-          <span class="region-name">${r.name}</span>
-          <div class="region-right">
-            <span class="region-score">${r.score}</span>
-            <span class="region-badge" style="background:${r.rc.color}">${r.rc.level}</span>
-          </div>
-        </div>`
+        `<div class="region-row"><span class="region-name">${r.name}</span><div class="region-right"><span class="region-score">${r.score}</span><span class="region-badge" style="background:${r.rc.color}">${r.rc.level}</span></div></div>`
       ).join("");
-
       const mitHtml = d.mitigation.map((m, i) =>
         `<div class="mit-item"><span class="mit-num">${i + 1}.</span><span>${m}</span></div>`
       ).join("");
-
-      const rationaleHtml = lr.rationale
-        ? `<div class="lr-label">評価根拠</div><div class="lr-rationale">${lr.rationale}</div>` : "";
-
+      const rationaleHtml = lr.rationale ? `<div class="lr-label">評価根拠</div><div class="lr-rationale">${lr.rationale}</div>` : "";
       document.getElementById("logistics-area").innerHTML = `
         <div class="lr-wrap">
           <button class="lr-toggle open" id="lr-btn" onclick="toggleLR()">
@@ -377,43 +526,22 @@
           </button>
           <div class="lr-body open" id="lr-body">
             <div class="lr-label">ホルムズ海峡 総合リスクスコア</div>
-            <div class="gauge-track">
-              <div class="gauge-fill" style="width:${d.hScore}%;background:${rc.color}"></div>
-            </div>
+            <div class="gauge-track"><div class="gauge-fill" style="width:${d.hScore}%;background:${rc.color}"></div></div>
             <div class="gauge-meta">
               <span style="color:${rc.color};font-weight:700;font-size:13px">${d.hScore} / 100 — ${rc.label}</span>
               <span style="color:var(--muted);font-size:10px">増幅係数 ×${d.mult}</span>
             </div>
             ${rationaleHtml}
-            <div class="lr-label">リスク因子</div>
-            ${factorsHtml}
-            <div class="lr-label">地域別リスク</div>
-            ${regionsHtml}
+            <div class="lr-label">リスク因子</div>${factorsHtml}
+            <div class="lr-label">地域別リスク</div>${regionsHtml}
             <div class="lr-label">輸送コスト影響</div>
             <div class="cost-grid">
-              <div class="cost-item">
-                <div class="cost-label">原油価格（WTI）</div>
-                <div class="cost-val">${d.oil.toFixed(1)} <span style="font-size:10px;font-weight:400">$/bbl</span></div>
-                <div class="cost-sub" style="color:${rg(d.oilPct)}">${sg(d.oilPct)}${d.oilPct.toFixed(1)}%</div>
-              </div>
-              <div class="cost-item">
-                <div class="cost-label">傭船料（VLCC）</div>
-                <div class="cost-val">${d.freight.toLocaleString()} <span style="font-size:10px;font-weight:400">$/d</span></div>
-                <div class="cost-sub" style="color:${rg(d.freightPct)}">${sg(d.freightPct)}${d.freightPct.toFixed(1)}%</div>
-              </div>
-              <div class="cost-item">
-                <div class="cost-label">戦争リスク保険料</div>
-                <div class="cost-val">${d.wpPct.toFixed(2)}<span style="font-size:10px;font-weight:400">%</span></div>
-                <div class="cost-sub" style="color:var(--muted)">対船価</div>
-              </div>
-              <div class="cost-item hl">
-                <div class="cost-label">総コスト指数</div>
-                <div class="cost-val" style="color:${rc.color}">${d.costIdx}</div>
-                <div class="cost-sub" style="color:${rg(d.costIdx - 100)}">${sg(d.costIdx - 100)}${(d.costIdx - 100).toFixed(1)}%</div>
-              </div>
+              <div class="cost-item"><div class="cost-label">原油価格（WTI）</div><div class="cost-val">${d.oil.toFixed(1)} <span style="font-size:10px;font-weight:400">$/bbl</span></div><div class="cost-sub" style="color:${rg(d.oilPct)}">${sg(d.oilPct)}${d.oilPct.toFixed(1)}%</div></div>
+              <div class="cost-item"><div class="cost-label">傭船料（VLCC）</div><div class="cost-val">${d.freight.toLocaleString()} <span style="font-size:10px;font-weight:400">$/d</span></div><div class="cost-sub" style="color:${rg(d.freightPct)}">${sg(d.freightPct)}${d.freightPct.toFixed(1)}%</div></div>
+              <div class="cost-item"><div class="cost-label">戦争リスク保険料</div><div class="cost-val">${d.wpPct.toFixed(2)}<span style="font-size:10px;font-weight:400">%</span></div><div class="cost-sub" style="color:var(--muted)">対船価</div></div>
+              <div class="cost-item hl"><div class="cost-label">総コスト指数</div><div class="cost-val" style="color:${rc.color}">${d.costIdx}</div><div class="cost-sub" style="color:${rg(d.costIdx-100)}">${sg(d.costIdx-100)}${(d.costIdx-100).toFixed(1)}%</div></div>
             </div>
-            <div class="lr-label">推奨対策アクション（${d.mitigation.length}件）</div>
-            ${mitHtml}
+            <div class="lr-label">推奨対策アクション（${d.mitigation.length}件）</div>${mitHtml}
           </div>
         </div>`;
     }
@@ -426,6 +554,9 @@
 
     // ── メイン取得処理 ────────────────────────────────────────────────────────
     async function fetchBriefing() {
+      const apiKey = loadApiKey();
+      if (!apiKey) { showSettings(); return; }
+
       const btn = document.getElementById("fetch-btn");
       btn.disabled = true;
       btn.innerHTML = '<span class="spin">⟳</span> 多ソース検索中…（15〜30秒）';
@@ -436,12 +567,17 @@
       });
 
       const today = new Date().toLocaleDateString("ja-JP", {year:"numeric",month:"long",day:"numeric"});
-      const userPrompt = `本日のイラン戦争・ホルムズ海峡情勢について、ドル円相場への影響を最優先にウェブ検索し、最新ニュースを以下の多様なソースから収集して報告してください：CNN、BBC、Reuters、Al Jazeera、CNBC、Bloomberg、AP、AFP、WSJ、Financial Times、Lloyd's List、PressTV、IRNA、Tasnim、CSIS。物流リスクスコアも実際のニュースから定量評価してください。今日の日付: ${today}`;
+      const userPrompt = `本日のイラン戦争・ホルムズ海峡情勢について、ドル円相場への影響を最優先にウェブ検索し、最新ニュースをCNN、BBC、Reuters、Al Jazeera、CNBC、Bloomberg、AP、AFP、WSJ、Financial Times、Lloyd's List、PressTV、IRNA、Tasnim、CSISから収集して報告してください。物流リスクスコアも実際のニュースから定量評価してください。今日の日付: ${today}`;
 
       try {
         const res = await fetch(ANTHROPIC_API, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": apiKey,
+            "anthropic-version": "2023-06-01",
+            "anthropic-dangerous-direct-browser-access": "true",
+          },
           body: JSON.stringify({
             model: "claude-sonnet-4-20250514",
             max_tokens: 1200,
@@ -450,6 +586,9 @@
             messages: [{ role: "user", content: userPrompt }]
           })
         });
+
+        if (res.status === 401) throw new Error("APIキーが無効です。⚙️ から再設定してください。");
+        if (!res.ok) throw new Error(`APIエラー: ${res.status}`);
 
         const raw = await res.json();
         const textBlocks = (raw.content || []).filter(b => b.type === "text").map(b => b.text).join("");
@@ -461,7 +600,7 @@
 
       } catch (e) {
         document.getElementById("error-area").innerHTML =
-          `<div class="error-box">⚠️ エラー: ${e.message}<br><small>しばらく待ってから再度お試しください。</small></div>`;
+          `<div class="error-box">⚠️ ${e.message}<br><small>しばらく待ってから再度お試しください。</small></div>`;
         document.getElementById("placeholder").style.display = "block";
       } finally {
         btn.disabled = false;
@@ -475,55 +614,34 @@
       document.getElementById("fx-alert-area").innerHTML = `
         <div class="fx-alert" style="background:${cfg.bg};border:1px solid ${cfg.border};">
           <div><div class="fx-badge" style="background:${cfg.color};">${cfg.label}</div></div>
-          <div>
-            <div class="fx-label">USD/JPY インパクト</div>
-            <div class="fx-summary">${data.fx_alert?.summary || ""}</div>
-          </div>
+          <div><div class="fx-label">USD/JPY インパクト</div><div class="fx-summary">${data.fx_alert?.summary || ""}</div></div>
         </div>`;
-
-      if (data.timestamp) {
-        document.getElementById("timestamp-area").innerHTML =
-          `<div class="timestamp">🕐 ${data.timestamp}</div>`;
-      }
-
+      if (data.timestamp) document.getElementById("timestamp-area").innerHTML = `<div class="timestamp">🕐 ${data.timestamp}</div>`;
       let sectionsHtml = "";
       (data.sections || []).forEach(s => {
-        sectionsHtml += `<div class="section-card">
-          <div class="section-tag">${s.tag}</div>
-          <div class="section-text">${s.text}</div>
-        </div>`;
+        sectionsHtml += `<div class="section-card"><div class="section-tag">${s.tag}</div><div class="section-text">${s.text}</div></div>`;
       });
       document.getElementById("sections-area").innerHTML = sectionsHtml;
-
       if (data.bottom_line) {
         document.getElementById("bottom-line-area").innerHTML = `
-          <div class="bottom-line">
-            <div class="bottom-line-label">📌 TODAY'S BOTTOM LINE</div>
-            <div class="bottom-line-text">${data.bottom_line}</div>
-          </div>`;
+          <div class="bottom-line"><div class="bottom-line-label">📌 TODAY'S BOTTOM LINE</div><div class="bottom-line-text">${data.bottom_line}</div></div>`;
       }
-
-      if (data.logistics_risk) {
-        renderLogisticsRisk(data.logistics_risk);
-      }
-
+      if (data.logistics_risk) renderLogisticsRisk(data.logistics_risk);
       if (data.sources?.length) {
         const chips = data.sources.map(s => `<span class="source-chip">${s}</span>`).join("");
         document.getElementById("sources-area").innerHTML = `
-          <div class="sources">
-            <div class="sources-label">情報ソース（${data.sources.length}社）</div>
-            <div class="sources-list">${chips}</div>
-          </div>`;
+          <div class="sources"><div class="sources-label">情報ソース（${data.sources.length}社）</div><div class="sources-list">${chips}</div></div>`;
       }
     }
 
-    // ── Service Worker 登録 ───────────────────────────────────────────────────
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
+    // ── 起動処理 ──────────────────────────────────────────────────────────────
+    window.addEventListener('load', () => {
+      if (!loadApiKey()) showSettings();
+      if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js')
           .catch(err => console.warn('SW registration failed:', err));
-      });
-    }
+      }
+    });
   </script>
 </body>
 </html>

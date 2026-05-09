@@ -9,12 +9,10 @@
   <meta name="theme-color" content="#0a0f1a" />
   <title>イラン戦況 × ドル円</title>
 
-  <!-- Apple Touch Icon -->
   <link rel="apple-touch-icon" sizes="512x512" href="icon.png" />
   <link rel="apple-touch-icon" href="icon.png" />
   <link rel="icon" type="image/png" href="icon.png" />
 
-  <!-- PWA Manifest inline -->
   <link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;イラン戦況ブリーフィング&quot;,&quot;short_name&quot;:&quot;戦況BR&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;icon.png&quot;,&quot;sizes&quot;:&quot;512x512&quot;,&quot;type&quot;:&quot;image/png&quot;}],&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;%230a0f1a&quot;,&quot;theme_color&quot;:&quot;%230a0f1a&quot;}" />
 
   <style>
@@ -45,7 +43,6 @@
       overflow-x: hidden;
     }
 
-    /* Header */
     .header {
       background: linear-gradient(135deg, #0f1f3d 0%, #1a0a0a 100%);
       border-bottom: 1px solid rgba(239,68,68,0.3);
@@ -55,27 +52,10 @@
       top: 0;
       z-index: 100;
     }
-    .header-label {
-      font-size: 10px;
-      letter-spacing: 4px;
-      color: var(--red);
-      font-weight: 800;
-      text-transform: uppercase;
-      margin-bottom: 4px;
-    }
-    .header-title {
-      font-size: 18px;
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: 0.5px;
-    }
-    .header-sub {
-      font-size: 10px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
+    .header-label { font-size: 10px; letter-spacing: 4px; color: var(--red); font-weight: 800; text-transform: uppercase; margin-bottom: 4px; }
+    .header-title { font-size: 18px; font-weight: 800; color: #fff; letter-spacing: 0.5px; }
+    .header-sub { font-size: 10px; color: var(--muted); margin-top: 4px; }
 
-    /* Main content */
     .main {
       padding: 16px;
       padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 20px);
@@ -83,7 +63,6 @@
       margin: 0 auto;
     }
 
-    /* Fetch Button */
     .fetch-btn {
       width: 100%;
       padding: 16px;
@@ -106,158 +85,97 @@
       -webkit-appearance: none;
     }
     .fetch-btn:active { transform: scale(0.97); box-shadow: none; }
-    .fetch-btn:disabled {
-      background: #1e293b;
-      box-shadow: none;
-      cursor: not-allowed;
-    }
+    .fetch-btn:disabled { background: #1e293b; box-shadow: none; cursor: not-allowed; }
     .spin { display: inline-block; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* FX Alert */
-    .fx-alert {
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-    }
-    .fx-badge {
-      border-radius: 6px;
-      padding: 4px 10px;
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      white-space: nowrap;
-      margin-top: 2px;
-      color: #fff;
-    }
-    .fx-label {
-      font-size: 10px;
-      color: var(--muted);
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
-    }
-    .fx-summary {
-      font-size: 14px;
-      font-weight: 600;
-      color: #f1f5f9;
-      line-height: 1.55;
-    }
+    .fx-alert { border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 12px; }
+    .fx-badge { border-radius: 6px; padding: 4px 10px; font-size: 10px; font-weight: 800; letter-spacing: 0.5px; white-space: nowrap; margin-top: 2px; color: #fff; }
+    .fx-label { font-size: 10px; color: var(--muted); letter-spacing: 0.5px; margin-bottom: 4px; }
+    .fx-summary { font-size: 14px; font-weight: 600; color: #f1f5f9; line-height: 1.55; }
 
-    /* Timestamp */
-    .timestamp {
-      font-size: 10px;
-      color: var(--muted);
-      text-align: right;
-      margin-bottom: 10px;
-      letter-spacing: 0.5px;
-    }
+    .timestamp { font-size: 10px; color: var(--muted); text-align: right; margin-bottom: 10px; letter-spacing: 0.5px; }
 
-    /* Section card */
-    .section-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 10px;
-    }
-    .section-tag {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      color: var(--muted);
-      margin-bottom: 6px;
-      text-transform: uppercase;
-    }
-    .section-text {
-      font-size: 14px;
-      line-height: 1.8;
-      color: #cbd5e1;
-    }
+    .section-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+    .section-tag { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; }
+    .section-text { font-size: 14px; line-height: 1.8; color: #cbd5e1; }
 
-    /* Bottom line */
-    .bottom-line {
-      background: linear-gradient(135deg, #1e3a5f, #1a1a2e);
-      border: 1px solid rgba(99,179,237,0.25);
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 12px;
-    }
-    .bottom-line-label {
-      font-size: 10px;
-      color: var(--accent2);
-      font-weight: 700;
-      letter-spacing: 1px;
-      margin-bottom: 6px;
-    }
-    .bottom-line-text {
-      font-size: 14px;
-      font-weight: 600;
-      color: #e2e8f0;
-      line-height: 1.6;
-    }
+    .bottom-line { background: linear-gradient(135deg, #1e3a5f, #1a1a2e); border: 1px solid rgba(99,179,237,0.25); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; }
+    .bottom-line-label { font-size: 10px; color: var(--accent2); font-weight: 700; letter-spacing: 1px; margin-bottom: 6px; }
+    .bottom-line-text { font-size: 14px; font-weight: 600; color: #e2e8f0; line-height: 1.6; }
 
-    /* Sources */
-    .sources {
-      background: var(--surface2);
-      border-radius: 12px;
-      padding: 12px 16px;
-      margin-bottom: 12px;
-    }
-    .sources-label {
-      font-size: 10px;
-      color: var(--muted);
-      font-weight: 700;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
-    }
-    .sources-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-    .source-chip {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 4px;
-      padding: 2px 8px;
-      font-size: 10px;
-      color: var(--muted);
-    }
+    .sources { background: var(--surface2); border-radius: 12px; padding: 12px 16px; margin-bottom: 12px; }
+    .sources-label { font-size: 10px; color: var(--muted); font-weight: 700; letter-spacing: 1px; margin-bottom: 8px; }
+    .sources-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .source-chip { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; padding: 2px 8px; font-size: 10px; color: var(--muted); }
 
-    /* Placeholder */
-    .placeholder {
-      text-align: center;
-      padding: 60px 20px;
-      color: #334155;
-      font-size: 14px;
-      line-height: 2;
-    }
+    .placeholder { text-align: center; padding: 60px 20px; color: #334155; font-size: 14px; line-height: 2; }
     .placeholder-icon { font-size: 48px; margin-bottom: 16px; }
 
-    /* Error */
-    .error-box {
-      background: rgba(239,68,68,0.1);
-      border: 1px solid rgba(239,68,68,0.3);
+    .error-box { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; color: #fca5a5; font-size: 13px; line-height: 1.6; }
+
+    .footer { text-align: center; font-size: 9px; color: #1e293b; letter-spacing: 2px; padding: 12px; text-transform: uppercase; }
+
+    /* ── 物流リスクセクション ── */
+    .lr-wrap { margin-bottom: 12px; }
+
+    .lr-toggle {
+      width: 100%;
+      background: linear-gradient(135deg, #0d2137 0%, #1b1400 100%);
+      border: 1px solid rgba(245,158,11,0.28);
       border-radius: 12px;
       padding: 14px 16px;
-      margin-bottom: 12px;
-      color: #fca5a5;
-      font-size: 13px;
-      line-height: 1.6;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-family: 'Noto Sans JP', sans-serif;
+      -webkit-appearance: none;
+      transition: border-radius 0.2s;
     }
+    .lr-toggle.open { border-radius: 12px 12px 0 0; border-bottom-color: transparent; }
+    .lr-toggle:active { opacity: 0.85; }
+    .lr-toggle-left { display: flex; align-items: center; gap: 10px; }
+    .lr-toggle-title { font-size: 13px; font-weight: 700; color: #e2e8f0; }
+    .lr-score-badge { border-radius: 6px; padding: 3px 9px; font-size: 10px; font-weight: 800; color: #fff; letter-spacing: 0.5px; }
+    .lr-chevron { color: #64748b; font-size: 11px; transition: transform 0.25s; }
+    .lr-chevron.open { transform: rotate(180deg); }
 
-    /* Footer */
-    .footer {
-      text-align: center;
-      font-size: 9px;
-      color: #1e293b;
-      letter-spacing: 2px;
-      padding: 12px;
-      text-transform: uppercase;
-    }
+    .lr-body { background: var(--surface2); border: 1px solid rgba(245,158,11,0.15); border-top: none; border-radius: 0 0 12px 12px; padding: 14px 16px; display: none; }
+    .lr-body.open { display: block; }
+
+    .lr-label { font-size: 10px; color: var(--muted); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin: 14px 0 7px; }
+    .lr-label:first-child { margin-top: 0; }
+
+    .gauge-track { background: rgba(255,255,255,0.08); border-radius: 4px; height: 8px; }
+    .gauge-fill { height: 8px; border-radius: 4px; transition: width 0.7s ease; }
+    .gauge-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; font-size: 11px; }
+
+    .factor-row { margin-bottom: 9px; }
+    .factor-header { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #94a3b8; margin-bottom: 4px; }
+    .factor-val { color: #e2e8f0; font-weight: 600; }
+    .fbar-track { background: rgba(255,255,255,0.06); border-radius: 3px; height: 5px; }
+    .fbar-fill { height: 5px; border-radius: 3px; transition: width 0.6s ease; }
+
+    .region-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 12px; }
+    .region-row:last-child { border-bottom: none; }
+    .region-name { color: #94a3b8; }
+    .region-right { display: flex; align-items: center; gap: 8px; }
+    .region-score { color: #e2e8f0; font-weight: 700; font-size: 13px; min-width: 38px; text-align: right; }
+    .region-badge { border-radius: 4px; padding: 2px 7px; font-size: 9px; font-weight: 800; color: #fff; letter-spacing: 0.3px; }
+
+    .cost-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .cost-item { background: rgba(255,255,255,0.04); border-radius: 8px; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.05); }
+    .cost-item.hl { border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.06); }
+    .cost-label { font-size: 9px; color: var(--muted); letter-spacing: 0.5px; margin-bottom: 5px; text-transform: uppercase; }
+    .cost-val { font-size: 15px; font-weight: 700; color: #e2e8f0; }
+    .cost-sub { font-size: 10px; margin-top: 3px; }
+
+    .mit-item { display: flex; gap: 8px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 12px; color: #94a3b8; line-height: 1.55; }
+    .mit-item:last-child { border-bottom: none; }
+    .mit-num { color: var(--yellow); font-weight: 700; min-width: 20px; flex-shrink: 0; }
+
+    .lr-rationale { font-size: 12px; color: #64748b; line-height: 1.65; font-style: italic; background: rgba(255,255,255,0.03); border-radius: 8px; padding: 10px 12px; }
   </style>
 </head>
 <body>
@@ -278,13 +196,14 @@
     <div id="timestamp-area"></div>
     <div id="sections-area"></div>
     <div id="bottom-line-area"></div>
+    <div id="logistics-area"></div>
     <div id="sources-area"></div>
 
     <div class="placeholder" id="placeholder">
       <div class="placeholder-icon">🛰️</div>
       ボタンを押すと<br>
       20社以上のソースから最新情報を収集し<br>
-      ドル円影響度とともに報告します
+      ドル円影響度・物流リスクとともに報告します
     </div>
   </div>
 
@@ -293,7 +212,7 @@
   <script>
     const ANTHROPIC_API = "https://api.anthropic.com/v1/messages";
 
-    const SYSTEM_PROMPT = `あなたはプロの地政学・金融アナリストです。以下のルールで毎朝のブリーフィングを作成してください。
+    const SYSTEM_PROMPT = `あなたはプロの地政学・金融・物流リスクアナリストです。以下のルールで毎朝のブリーフィングを作成してください。
 
 【最優先】ドル円（USD/JPY）相場への直接的影響を持つ事象を必ず冒頭に配置すること。
 
@@ -307,12 +226,21 @@
     "summary": "ドル円への影響を1〜2文で簡潔に"
   },
   "sections": [
-    { "tag": "🔴 為替直結", "text": "ドル円に最も直接影響する事象（原油価格、リスクオン/オフ、制裁、エネルギー供給等）" },
-    { "tag": "⚔️ 戦況", "text": "軍事・作戦状況（Project Freedom、ホルムズ海峡、停戦状況）" },
+    { "tag": "🔴 為替直結", "text": "ドル円に最も直接影響する事象" },
+    { "tag": "⚔️ 戦況", "text": "軍事・作戦状況（ホルムズ海峡等）" },
     { "tag": "🕊️ 外交", "text": "和平交渉・国際外交の動き" },
     { "tag": "🇮🇷 イラン側", "text": "イラン政府・メディアの公式見解" },
     { "tag": "🌏 国際反応", "text": "欧州・アジア・湾岸諸国の反応" }
   ],
+  "logistics_risk": {
+    "military_activity": <軍事活動リスク 0〜10の数値>,
+    "sanctions_intensity": <制裁強度 0〜10の数値>,
+    "shipping_incidents": <海上事案の発生頻度 0〜10の数値>,
+    "oil_price_volatility": <原油価格ボラティリティ 0〜10の数値>,
+    "oil_price_usd": <現在のWTI原油価格（数値）>,
+    "war_risk_premium": <戦争リスク保険料の推定値 0.0〜0.1の小数>,
+    "rationale": "スコア算出の根拠を1〜2文で"
+  },
   "sources": ["情報源リスト（最低10社）"],
   "bottom_line": "今日の最重要ポイントを1文で"
 }
@@ -320,25 +248,201 @@
 情報は必ず最新のウェブ検索結果を元にしてください。500字程度を目安に簡潔明確に。`;
 
     const LEVEL_CONFIG = {
-      HIGH:   { color: "#ef4444", label: "⚠️ 高リスク", bg: "rgba(239,68,68,0.12)", border: "#ef4444" },
+      HIGH:   { color: "#ef4444", label: "⚠️ 高リスク", bg: "rgba(239,68,68,0.12)",  border: "#ef4444" },
       MEDIUM: { color: "#f59e0b", label: "⚡ 中リスク", bg: "rgba(245,158,11,0.12)", border: "#f59e0b" },
-      LOW:    { color: "#22c55e", label: "✅ 低リスク", bg: "rgba(34,197,94,0.12)", border: "#22c55e" },
+      LOW:    { color: "#22c55e", label: "✅ 低リスク", bg: "rgba(34,197,94,0.12)",  border: "#22c55e" },
     };
 
+    // ── 物流リスクエンジン ──────────────────────────────────────────────────
+    const FACTOR_W = {
+      military_activity:    { label: "軍事活動・作戦行動",      weight: 0.30 },
+      sanctions_intensity:  { label: "制裁強度",               weight: 0.25 },
+      shipping_incidents:   { label: "海上事案",               weight: 0.25 },
+      oil_price_volatility: { label: "原油価格ボラティリティ",   weight: 0.20 },
+    };
+
+    const REGION_RATIOS = [
+      { name: "ホルムズ海峡",           ratio: 1.00 },
+      { name: "ペルシャ湾",             ratio: 0.90 },
+      { name: "オマーン湾",            ratio: 0.82 },
+      { name: "アラビア海",             ratio: 0.62 },
+      { name: "紅海・バブエルマンデブ", ratio: 0.78 },
+    ];
+
+    const BASE_OIL = 75.0, BASE_FREIGHT = 30000, OIL_CORR = 0.72;
+
+    const RCFG = [
+      { lo: 0,  hi: 30,  level: "LOW",      label: "低リスク", color: "#22c55e" },
+      { lo: 30, hi: 60,  level: "MEDIUM",   label: "中リスク", color: "#f59e0b" },
+      { lo: 60, hi: 80,  level: "HIGH",     label: "高リスク", color: "#f97316" },
+      { lo: 80, hi: 101, level: "CRITICAL", label: "危機的",   color: "#ef4444" },
+    ];
+
+    function getRC(s) { return RCFG.find(r => s >= r.lo && s < r.hi) || RCFG[3]; }
+
+    function calcLogistics(lr) {
+      let hScore = 0;
+      const factors = [];
+      for (const [key, cfg] of Object.entries(FACTOR_W)) {
+        const s = Math.min(Math.max(+(lr[key] || 0), 0), 10);
+        const w = Math.round(s * cfg.weight * 10 * 10) / 10;
+        hScore += w;
+        factors.push({ label: cfg.label, score: s, pct: s * 10 });
+      }
+      hScore = Math.round(hScore * 10) / 10;
+      const mult = +(1.0 + (hScore / 100) * 1.5).toFixed(3);
+
+      const regions = REGION_RATIOS.map(r => {
+        const s = Math.min(Math.round(hScore * r.ratio * mult * 10) / 10, 100);
+        return { name: r.name, score: s, rc: getRC(s) };
+      });
+
+      const oil = +(lr.oil_price_usd || BASE_OIL);
+      const wp  = +(lr.war_risk_premium || 0);
+      const oilPct     = (oil - BASE_OIL) / BASE_OIL * 100;
+      const freightPct = oilPct * OIL_CORR;
+      const freight    = Math.round(BASE_FREIGHT * (1 + freightPct / 100));
+      const costIdx    = Math.round((100 + freightPct * 0.5 + wp * 200) * 10) / 10;
+
+      const mitigation = buildMitigation(hScore);
+      return { hScore, factors, mult, regions, oil, oilPct, freight, freightPct, wpPct: wp * 100, costIdx, mitigation };
+    }
+
+    function buildMitigation(s) {
+      const a = [
+        "積荷保険の保険条件・除外事項を再確認する",
+        "主要バイヤー・サプライヤーへのリスク状況を共有する",
+      ];
+      if (s >= 30) a.push(
+        "喜望峰迂回ルートの費用・日程を試算する",
+        "戦争リスク保険（War Risk Premium）の追加手配を検討する",
+        "予備調達先（UAEまたは東南アジア経由）をリストアップする"
+      );
+      if (s >= 60) a.push(
+        "既存LCの延長・期限変更をバイヤーと事前協議する",
+        "FOB条件からCIF/DAPへの条件変更を検討する",
+        "プラント納期への影響をエンドユーザーへ事前通知する"
+      );
+      if (s >= 80) a.push(
+        "ホルムズ経由貨物の出荷を一時停止し代替手配を優先する",
+        "フォースマジュール条項の適用可否を法務確認する"
+      );
+      return a;
+    }
+
+    function renderLogisticsRisk(lr) {
+      const d = calcLogistics(lr);
+      const rc = getRC(d.hScore);
+      const sg = v => v >= 0 ? "+" : "";
+      const rg = v => v >= 0 ? "#ef4444" : "#22c55e";
+
+      const factorsHtml = d.factors.map(f => {
+        const fc = getRC(f.pct);
+        return `<div class="factor-row">
+          <div class="factor-header">
+            <span>${f.label}</span>
+            <span class="factor-val">${f.score.toFixed(1)} / 10</span>
+          </div>
+          <div class="fbar-track">
+            <div class="fbar-fill" style="width:${f.pct}%;background:${fc.color}"></div>
+          </div>
+        </div>`;
+      }).join("");
+
+      const regionsHtml = d.regions.map(r =>
+        `<div class="region-row">
+          <span class="region-name">${r.name}</span>
+          <div class="region-right">
+            <span class="region-score">${r.score}</span>
+            <span class="region-badge" style="background:${r.rc.color}">${r.rc.level}</span>
+          </div>
+        </div>`
+      ).join("");
+
+      const mitHtml = d.mitigation.map((m, i) =>
+        `<div class="mit-item"><span class="mit-num">${i + 1}.</span><span>${m}</span></div>`
+      ).join("");
+
+      const rationaleHtml = lr.rationale
+        ? `<div class="lr-label">評価根拠</div><div class="lr-rationale">${lr.rationale}</div>` : "";
+
+      document.getElementById("logistics-area").innerHTML = `
+        <div class="lr-wrap">
+          <button class="lr-toggle open" id="lr-btn" onclick="toggleLR()">
+            <div class="lr-toggle-left">
+              <span style="font-size:17px">🚢</span>
+              <span class="lr-toggle-title">物流リスク分析（AI自動評価）</span>
+              <span class="lr-score-badge" style="background:${rc.color}">${d.hScore} · ${rc.level}</span>
+            </div>
+            <span class="lr-chevron open" id="lr-chev">▼</span>
+          </button>
+          <div class="lr-body open" id="lr-body">
+            <div class="lr-label">ホルムズ海峡 総合リスクスコア</div>
+            <div class="gauge-track">
+              <div class="gauge-fill" style="width:${d.hScore}%;background:${rc.color}"></div>
+            </div>
+            <div class="gauge-meta">
+              <span style="color:${rc.color};font-weight:700;font-size:13px">${d.hScore} / 100 — ${rc.label}</span>
+              <span style="color:var(--muted);font-size:10px">増幅係数 ×${d.mult}</span>
+            </div>
+
+            ${rationaleHtml}
+
+            <div class="lr-label">リスク因子</div>
+            ${factorsHtml}
+
+            <div class="lr-label">地域別リスク</div>
+            ${regionsHtml}
+
+            <div class="lr-label">輸送コスト影響</div>
+            <div class="cost-grid">
+              <div class="cost-item">
+                <div class="cost-label">原油価格（WTI）</div>
+                <div class="cost-val">${d.oil.toFixed(1)} <span style="font-size:10px;font-weight:400">$/bbl</span></div>
+                <div class="cost-sub" style="color:${rg(d.oilPct)}">${sg(d.oilPct)}${d.oilPct.toFixed(1)}%</div>
+              </div>
+              <div class="cost-item">
+                <div class="cost-label">傭船料（VLCC）</div>
+                <div class="cost-val">${d.freight.toLocaleString()} <span style="font-size:10px;font-weight:400">$/d</span></div>
+                <div class="cost-sub" style="color:${rg(d.freightPct)}">${sg(d.freightPct)}${d.freightPct.toFixed(1)}%</div>
+              </div>
+              <div class="cost-item">
+                <div class="cost-label">戦争リスク保険料</div>
+                <div class="cost-val">${d.wpPct.toFixed(2)}<span style="font-size:10px;font-weight:400">%</span></div>
+                <div class="cost-sub" style="color:var(--muted)">対船価</div>
+              </div>
+              <div class="cost-item hl">
+                <div class="cost-label">総コスト指数</div>
+                <div class="cost-val" style="color:${rc.color}">${d.costIdx}</div>
+                <div class="cost-sub" style="color:${rg(d.costIdx - 100)}">${sg(d.costIdx - 100)}${(d.costIdx - 100).toFixed(1)}%</div>
+              </div>
+            </div>
+
+            <div class="lr-label">推奨対策アクション（${d.mitigation.length}件）</div>
+            ${mitHtml}
+          </div>
+        </div>`;
+    }
+
+    function toggleLR() {
+      document.getElementById("lr-body").classList.toggle("open");
+      document.getElementById("lr-chev").classList.toggle("open");
+      document.getElementById("lr-btn").classList.toggle("open");
+    }
+
+    // ── メイン取得処理 ────────────────────────────────────────────────────────
     async function fetchBriefing() {
       const btn = document.getElementById("fetch-btn");
       btn.disabled = true;
       btn.innerHTML = '<span class="spin">⟳</span> 多ソース検索中…（15〜30秒）';
       document.getElementById("placeholder").style.display = "none";
-      document.getElementById("error-area").innerHTML = "";
-      document.getElementById("fx-alert-area").innerHTML = "";
-      document.getElementById("timestamp-area").innerHTML = "";
-      document.getElementById("sections-area").innerHTML = "";
-      document.getElementById("bottom-line-area").innerHTML = "";
-      document.getElementById("sources-area").innerHTML = "";
+      ["error-area","fx-alert-area","timestamp-area","sections-area",
+       "bottom-line-area","logistics-area","sources-area"].forEach(id => {
+        document.getElementById(id).innerHTML = "";
+      });
 
       const today = new Date().toLocaleDateString("ja-JP", {year:"numeric",month:"long",day:"numeric"});
-      const userPrompt = `本日のイラン戦争・ホルムズ海峡情勢について、ドル円相場への影響を最優先にウェブ検索し、最新ニュースを以下の多様なソースから収集して報告してください：CNN、BBC、Reuters、Al Jazeera、CNBC、Bloomberg、AP、AFP、WSJ、Financial Times、Lloyd's List、PressTV、IRNA、Tasnim、CSIS。今日の日付: ${today}`;
+      const userPrompt = `本日のイラン戦争・ホルムズ海峡情勢について、ドル円相場への影響を最優先にウェブ検索し、最新ニュースを以下の多様なソースから収集して報告してください：CNN、BBC、Reuters、Al Jazeera、CNBC、Bloomberg、AP、AFP、WSJ、Financial Times、Lloyd's List、PressTV、IRNA、Tasnim、CSIS。物流リスクスコアも実際のニュースから定量評価してください。今日の日付: ${today}`;
 
       try {
         const res = await fetch(ANTHROPIC_API, {
@@ -346,7 +450,7 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             model: "claude-sonnet-4-20250514",
-            max_tokens: 1000,
+            max_tokens: 1200,
             system: SYSTEM_PROMPT,
             tools: [{ type: "web_search_20250305", name: "web_search" }],
             messages: [{ role: "user", content: userPrompt }]
@@ -372,38 +476,31 @@
     }
 
     function renderData(data) {
-      // FX Alert
       const level = data.fx_alert?.level || "MEDIUM";
       const cfg = LEVEL_CONFIG[level] || LEVEL_CONFIG.MEDIUM;
       document.getElementById("fx-alert-area").innerHTML = `
-        <div class="fx-alert" style="background:${cfg.bg}; border: 1px solid ${cfg.border};">
-          <div>
-            <div class="fx-badge" style="background:${cfg.color};">${cfg.label}</div>
-          </div>
+        <div class="fx-alert" style="background:${cfg.bg};border:1px solid ${cfg.border};">
+          <div><div class="fx-badge" style="background:${cfg.color};">${cfg.label}</div></div>
           <div>
             <div class="fx-label">USD/JPY インパクト</div>
             <div class="fx-summary">${data.fx_alert?.summary || ""}</div>
           </div>
         </div>`;
 
-      // Timestamp
       if (data.timestamp) {
         document.getElementById("timestamp-area").innerHTML =
           `<div class="timestamp">🕐 ${data.timestamp}</div>`;
       }
 
-      // Sections
       let sectionsHtml = "";
       (data.sections || []).forEach(s => {
-        sectionsHtml += `
-          <div class="section-card">
-            <div class="section-tag">${s.tag}</div>
-            <div class="section-text">${s.text}</div>
-          </div>`;
+        sectionsHtml += `<div class="section-card">
+          <div class="section-tag">${s.tag}</div>
+          <div class="section-text">${s.text}</div>
+        </div>`;
       });
       document.getElementById("sections-area").innerHTML = sectionsHtml;
 
-      // Bottom Line
       if (data.bottom_line) {
         document.getElementById("bottom-line-area").innerHTML = `
           <div class="bottom-line">
@@ -412,7 +509,10 @@
           </div>`;
       }
 
-      // Sources
+      if (data.logistics_risk) {
+        renderLogisticsRisk(data.logistics_risk);
+      }
+
       if (data.sources?.length) {
         const chips = data.sources.map(s => `<span class="source-chip">${s}</span>`).join("");
         document.getElementById("sources-area").innerHTML = `

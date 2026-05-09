@@ -12,8 +12,7 @@
   <link rel="apple-touch-icon" sizes="512x512" href="icon.png" />
   <link rel="apple-touch-icon" href="icon.png" />
   <link rel="icon" type="image/png" href="icon.png" />
-
-  <link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;イラン戦況ブリーフィング&quot;,&quot;short_name&quot;:&quot;戦況BR&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;icon.png&quot;,&quot;sizes&quot;:&quot;512x512&quot;,&quot;type&quot;:&quot;image/png&quot;}],&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;%230a0f1a&quot;,&quot;theme_color&quot;:&quot;%230a0f1a&quot;}" />
+  <link rel="manifest" href="manifest.json" />
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700;800&display=swap');
@@ -255,10 +254,10 @@
 
     // ── 物流リスクエンジン ──────────────────────────────────────────────────
     const FACTOR_W = {
-      military_activity:    { label: "軍事活動・作戦行動",      weight: 0.30 },
-      sanctions_intensity:  { label: "制裁強度",               weight: 0.25 },
-      shipping_incidents:   { label: "海上事案",               weight: 0.25 },
-      oil_price_volatility: { label: "原油価格ボラティリティ",   weight: 0.20 },
+      military_activity:    { label: "軍事活動・作戦行動",    weight: 0.30 },
+      sanctions_intensity:  { label: "制裁強度",             weight: 0.25 },
+      shipping_incidents:   { label: "海上事案",             weight: 0.25 },
+      oil_price_volatility: { label: "原油価格ボラティリティ", weight: 0.20 },
     };
 
     const REGION_RATIOS = [
@@ -304,8 +303,8 @@
       const freight    = Math.round(BASE_FREIGHT * (1 + freightPct / 100));
       const costIdx    = Math.round((100 + freightPct * 0.5 + wp * 200) * 10) / 10;
 
-      const mitigation = buildMitigation(hScore);
-      return { hScore, factors, mult, regions, oil, oilPct, freight, freightPct, wpPct: wp * 100, costIdx, mitigation };
+      return { hScore, factors, mult, regions, oil, oilPct, freight, freightPct, wpPct: wp * 100, costIdx,
+               mitigation: buildMitigation(hScore) };
     }
 
     function buildMitigation(s) {
@@ -385,15 +384,11 @@
               <span style="color:${rc.color};font-weight:700;font-size:13px">${d.hScore} / 100 — ${rc.label}</span>
               <span style="color:var(--muted);font-size:10px">増幅係数 ×${d.mult}</span>
             </div>
-
             ${rationaleHtml}
-
             <div class="lr-label">リスク因子</div>
             ${factorsHtml}
-
             <div class="lr-label">地域別リスク</div>
             ${regionsHtml}
-
             <div class="lr-label">輸送コスト影響</div>
             <div class="cost-grid">
               <div class="cost-item">
@@ -417,7 +412,6 @@
                 <div class="cost-sub" style="color:${rg(d.costIdx - 100)}">${sg(d.costIdx - 100)}${(d.costIdx - 100).toFixed(1)}%</div>
               </div>
             </div>
-
             <div class="lr-label">推奨対策アクション（${d.mitigation.length}件）</div>
             ${mitHtml}
           </div>
@@ -521,6 +515,14 @@
             <div class="sources-list">${chips}</div>
           </div>`;
       }
+    }
+
+    // ── Service Worker 登録 ───────────────────────────────────────────────────
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .catch(err => console.warn('SW registration failed:', err));
+      });
     }
   </script>
 </body>

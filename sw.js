@@ -1,4 +1,4 @@
-const CACHE_NAME = 'iran-briefing-v1';
+const CACHE_NAME = 'iran-briefing-v2';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -6,7 +6,6 @@ const STATIC_ASSETS = [
   './icon.png',
 ];
 
-// インストール時に静的アセットをキャッシュ
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -15,7 +14,6 @@ self.addEventListener('install', event => {
   );
 });
 
-// 古いキャッシュを削除
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
@@ -26,20 +24,17 @@ self.addEventListener('activate', event => {
   );
 });
 
-// フェッチ戦略
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
 
-  // Anthropic API・外部APIは常にネットワーク優先（キャッシュしない）
+  // Anthropic API・外部APIは常にネットワーク直通
   if (url.hostname === 'api.anthropic.com' || url.hostname.includes('googleapis')) {
     return;
   }
 
-  // 静的アセット: キャッシュファースト、なければネットワーク取得してキャッシュ
   event.respondWith(
     caches.match(event.request).then(cached => {
       if (cached) return cached;
-
       return fetch(event.request)
         .then(response => {
           if (!response || response.status !== 200 || response.type === 'opaque') {
@@ -50,7 +45,6 @@ self.addEventListener('fetch', event => {
           return response;
         })
         .catch(() => {
-          // オフライン時はindex.htmlにフォールバック
           if (event.request.destination === 'document') {
             return caches.match('./index.html');
           }

@@ -67,15 +67,9 @@
 
     .settings-icon { font-size: 38px; text-align: center; margin-bottom: 10px; }
     .settings-title { font-size: 18px; font-weight: 800; color: #fff; text-align: center; margin-bottom: 6px; }
-    .settings-desc {
-      font-size: 12px; color: var(--muted); text-align: center;
-      line-height: 1.7; margin-bottom: 22px;
-    }
+    .settings-desc { font-size: 12px; color: var(--muted); text-align: center; line-height: 1.7; margin-bottom: 22px; }
 
-    .settings-section-label {
-      font-size: 10px; font-weight: 700; letter-spacing: 1px;
-      color: var(--muted); text-transform: uppercase; margin-bottom: 8px;
-    }
+    .settings-section-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
 
     .key-input-wrap { position: relative; margin-bottom: 10px; }
     .key-input {
@@ -125,9 +119,7 @@
     }
     .settings-save-btn:active { opacity: 0.8; }
 
-    .settings-note {
-      font-size: 11px; color: #334155; text-align: center; line-height: 1.6;
-    }
+    .settings-note { font-size: 11px; color: #334155; text-align: center; line-height: 1.6; }
     .settings-note a { color: #475569; }
 
     /* ── Header ── */
@@ -349,7 +341,7 @@
       }
       document.getElementById('api-key-input').value = '';
       document.getElementById('settings-overlay').classList.remove('hidden');
-      setTimeout(() => document.getElementById('api-key-input').focus(), 100);
+      setTimeout(() => document.getElementById('api-key-input').focus(), 80);
     }
 
     function hideSettings() {
@@ -391,7 +383,6 @@
       else                           { input.type = 'password'; btn.textContent = '👁️'; }
     }
 
-    // Enterキーで保存
     document.getElementById('api-key-input').addEventListener('keydown', e => {
       if (e.key === 'Enter') saveAndClose();
     });
@@ -555,7 +546,7 @@
     // ── メイン取得処理 ────────────────────────────────────────────────────────
     async function fetchBriefing() {
       const apiKey = loadApiKey();
-      if (!apiKey) { showSettings(); return; }
+      if (!apiKey) { showSettings(); return; }  // キー未設定ならモーダル表示
 
       const btn = document.getElementById("fetch-btn");
       btn.disabled = true;
@@ -634,14 +625,19 @@
       }
     }
 
-    // ── 起動処理 ──────────────────────────────────────────────────────────────
-    window.addEventListener('load', () => {
-      if (!loadApiKey()) showSettings();
-      if ('serviceWorker' in navigator) {
+    // ── 起動処理（スクリプト末尾で即時実行 — loadイベント待ち不要）──────────
+    // ①キー未設定なら即モーダル表示
+    if (!loadApiKey()) {
+      showSettings();
+    }
+
+    // ② Service Worker 登録（バックグラウンド）
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
           .catch(err => console.warn('SW registration failed:', err));
-      }
-    });
+      });
+    }
   </script>
 </body>
 </html>

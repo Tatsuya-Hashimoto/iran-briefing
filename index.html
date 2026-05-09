@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="戦況ブリーフィング" />
+  <meta name="theme-color" content="#0a0f1a" />
+  <title>イラン戦況 × ドル円</title>
+
+  <!-- PWA Manifest inline -->
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- Apple Touch Icon (SVG fallback) -->
+  <link rel="apple-touch-icon" href="icon.png" />
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700;800&display=swap');
+
+    :root {
+      --bg: #0a0f1a;
+      --surface: #111827;
+      --surface2: #0f172a;
+      --border: rgba(255,255,255,0.07);
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --accent: #c0392b;
+      --accent2: #63b3ed;
+      --red: #ef4444;
+      --yellow: #f59e0b;
+      --green: #22c55e;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans JP', sans-serif;
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #0f1f3d 0%, #1a0a0a 100%);
+      border-bottom: 1px solid rgba(239,68,68,0.3);
+      padding: env(safe-area-inset-top, 44px) 20px 16px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-label {
+      font-size: 10px;
+      letter-spacing: 4px;
+      color: var(--red);
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .header-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+    .header-sub {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* Main content */
+    .main {
+      padding: 16px;
+      padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 20px);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Fetch Button */
+    .fetch-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #c0392b, #922b21);
+      border: none;
+      border-radius: 14px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'Noto Sans JP', sans-serif;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 24px rgba(192,57,43,0.45);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      -webkit-appearance: none;
+    }
+    .fetch-btn:active { transform: scale(0.97); box-shadow: none; }
+    .fetch-btn:disabled {
+      background: #1e293b;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+    .spin { display: inline-block; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* FX Alert */
+    .fx-alert {
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .fx-badge {
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      margin-top: 2px;
+      color: #fff;
+    }
+    .fx-label {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .fx-summary {
+      font-size: 14px;
+      font-weight: 600;
+      color: #f1f5f9;
+      line-height: 1.55;
+    }
+
+    /* Timestamp */
+    .timestamp {
+      font-size: 10px;
+      color: var(--muted);
+      text-align: right;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Section card */
+    .section-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+    .section-tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+    .section-text {
+      font-size: 14px;
+      line-height: 1.8;
+      color: #cbd5e1;
+    }
+
+    /* Bottom line */
+    .bottom-line {
+      background: linear-gradient(135deg, #1e3a5f, #1a1a2e);
+      border: 1px solid rgba(99,179,237,0.25);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+    .bottom-line-label {
+      font-size: 10px;
+      color: var(--accent2);
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+    .bottom-line-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: #e2e8f0;
+      line-height: 1.6;
+    }
+
+    /* Sources */
+    .sources {
+      background: var(--surface2);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+    }
+    .sources-label {
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .sources-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .source-chip {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    /* Placeholder */
+    .placeholder {
+      text-align: center;
+      padding: 60px 20px;
+      color: #334155;
+      font-size: 14px;
+      line-height: 2;
+    }
+    .placeholder-icon { font-size: 48px; margin-bottom: 16px; }
+
+    /* Error */
+    .error-box {
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      color: #fca5a5;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      font-size: 9px;
+      color: #1e293b;
+      letter-spacing: 2px;
+      padding: 12px;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-label">Daily Intelligence Briefing</div>
+    <div class="header-title">イラン戦況 × ドル円 モニター</div>
+    <div class="header-sub" id="last-fetched">未取得</div>
+  </div>
+
+  <div class="main">
+    <button class="fetch-btn" id="fetch-btn" onclick="fetchBriefing()">
+      📡 最新ブリーフィングを取得
+    </button>
+
+    <div id="error-area"></div>
+    <div id="fx-alert-area"></div>
+    <div id="timestamp-area"></div>
+    <div id="sections-area"></div>
+    <div id="bottom-line-area"></div>
+    <div id="sources-area"></div>
+
+    <div class="placeholder" id="placeholder">
+      <div class="placeholder-icon">🛰️</div>
+      ボタンを押すと<br>
+      20社以上のソースから最新情報を収集し<br>
+      ドル円影響度とともに報告します
+    </div>
+  </div>
+
+  <div class="footer">For Personal Use · Hashim Iran Briefing Monitor</div>
+
+  <script>
+    const ANTHROPIC_API = "https://api.anthropic.com/v1/messages";
+
+    const SYSTEM_PROMPT = `あなたはプロの地政学・金融アナリストです。以下のルールで毎朝のブリーフィングを作成してください。
+
+【最優先】ドル円（USD/JPY）相場への直接的影響を持つ事象を必ず冒頭に配置すること。
+
+【フォーマット】
+必ずJSON形式のみで返答してください（マークダウン・バッククォート不要）。
+
+{
+  "timestamp": "報告時刻（例：2026年5月9日 8:15時点）",
+  "fx_alert": {
+    "level": "HIGH" | "MEDIUM" | "LOW",
+    "summary": "ドル円への影響を1〜2文で簡潔に"
+  },
+  "sections": [
+    { "tag": "🔴 為替直結", "text": "ドル円に最も直接影響する事象（原油価格、リスクオン/オフ、制裁、エネルギー供給等）" },
+    { "tag": "⚔️ 戦況", "text": "軍事・作戦状況（Project Freedom、ホルムズ海峡、停戦状況）" },
+    { "tag": "🕊️ 外交", "text": "和平交渉・国際外交の動き" },
+    { "tag": "🇮🇷 イラン側", "text": "イラン政府・メディアの公式見解" },
+    { "tag": "🌏 国際反応", "text": "欧州・アジア・湾岸諸国の反応" }
+  ],
+  "sources": ["情報源リスト（最低10社）"],
+  "bottom_line": "今日の最重要ポイントを1文で"
+}
+
+情報は必ず最新のウェブ検索結果を元にしてください。500字程度を目安に簡潔明確に。`;
+
+    const LEVEL_CONFIG = {
+      HIGH:   { color: "#ef4444", label: "⚠️ 高リスク", bg: "rgba(239,68,68,0.12)", border: "#ef4444" },
+      MEDIUM: { color: "#f59e0b", label: "⚡ 中リスク", bg: "rgba(245,158,11,0.12)", border: "#f59e0b" },
+      LOW:    { color: "#22c55e", label: "✅ 低リスク", bg: "rgba(34,197,94,0.12)", border: "#22c55e" },
+    };
+
+    async function fetchBriefing() {
+      const btn = document.getElementById("fetch-btn");
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spin">⟳</span> 多ソース検索中…（15〜30秒）';
+      document.getElementById("placeholder").style.display = "none";
+      document.getElementById("error-area").innerHTML = "";
+      document.getElementById("fx-alert-area").innerHTML = "";
+      document.getElementById("timestamp-area").innerHTML = "";
+      document.getElementById("sections-area").innerHTML = "";
+      document.getElementById("bottom-line-area").innerHTML = "";
+      document.getElementById("sources-area").innerHTML = "";
+
+      const today = new Date().toLocaleDateString("ja-JP", {year:"numeric",month:"long",day:"numeric"});
+      const userPrompt = `本日のイラン戦争・ホルムズ海峡情勢について、ドル円相場への影響を最優先にウェブ検索し、最新ニュースを以下の多様なソースから収集して報告してください：CNN、BBC、Reuters、Al Jazeera、CNBC、Bloomberg、AP、AFP、WSJ、Financial Times、Lloyd's List、PressTV、IRNA、Tasnim、CSIS。今日の日付: ${today}`;
+
+      try {
+        const res = await fetch(ANTHROPIC_API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: "claude-sonnet-4-20250514",
+            max_tokens: 1000,
+            system: SYSTEM_PROMPT,
+            tools: [{ type: "web_search_20250305", name: "web_search" }],
+            messages: [{ role: "user", content: userPrompt }]
+          })
+        });
+
+        const raw = await res.json();
+        const textBlocks = (raw.content || []).filter(b => b.type === "text").map(b => b.text).join("");
+        const jsonMatch = textBlocks.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) throw new Error("レスポンスのJSON解析に失敗しました");
+        const data = JSON.parse(jsonMatch[0]);
+        renderData(data);
+        document.getElementById("last-fetched").textContent = "最終取得: " + new Date().toLocaleTimeString("ja-JP");
+
+      } catch (e) {
+        document.getElementById("error-area").innerHTML =
+          `<div class="error-box">⚠️ エラー: ${e.message}<br><small>しばらく待ってから再度お試しください。</small></div>`;
+        document.getElementById("placeholder").style.display = "block";
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = "📡 最新ブリーフィングを取得";
+      }
+    }
+
+    function renderData(data) {
+      // FX Alert
+      const level = data.fx_alert?.level || "MEDIUM";
+      const cfg = LEVEL_CONFIG[level] || LEVEL_CONFIG.MEDIUM;
+      document.getElementById("fx-alert-area").innerHTML = `
+        <div class="fx-alert" style="background:${cfg.bg}; border: 1px solid ${cfg.border};">
+          <div>
+            <div class="fx-badge" style="background:${cfg.color};">${cfg.label}</div>
+          </div>
+          <div>
+            <div class="fx-label">USD/JPY インパクト</div>
+            <div class="fx-summary">${data.fx_alert?.summary || ""}</div>
+          </div>
+        </div>`;
+
+      // Timestamp
+      if (data.timestamp) {
+        document.getElementById("timestamp-area").innerHTML =
+          `<div class="timestamp">🕐 ${data.timestamp}</div>`;
+      }
+
+      // Sections
+      let sectionsHtml = "";
+      (data.sections || []).forEach(s => {
+        sectionsHtml += `
+          <div class="section-card">
+            <div class="section-tag">${s.tag}</div>
+            <div class="section-text">${s.text}</div>
+          </div>`;
+      });
+      document.getElementById("sections-area").innerHTML = sectionsHtml;
+
+      // Bottom Line
+      if (data.bottom_line) {
+        document.getElementById("bottom-line-area").innerHTML = `
+          <div class="bottom-line">
+            <div class="bottom-line-label">📌 TODAY'S BOTTOM LINE</div>
+            <div class="bottom-line-text">${data.bottom_line}</div>
+          </div>`;
+      }
+
+      // Sources
+      if (data.sources?.length) {
+        const chips = data.sources.map(s => `<span class="source-chip">${s}</span>`).join("");
+        document.getElementById("sources-area").innerHTML = `
+          <div class="sources">
+            <div class="sources-label">情報ソース（${data.sources.length}社）</div>
+            <div class="sources-list">${chips}</div>
+          </div>`;
+      }
+    }
+  </script>
+</body>
+</html>

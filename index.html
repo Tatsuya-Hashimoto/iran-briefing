@@ -191,7 +191,10 @@
     .placeholder { text-align: center; padding: 60px 20px; color: #334155; font-size: 14px; line-height: 2; }
     .placeholder-icon { font-size: 48px; margin-bottom: 16px; }
 
-    .error-box { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; color: #fca5a5; font-size: 13px; line-height: 1.6; }
+    .error-box { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; color: #fca5a5; font-size: 13px; line-height: 1.8; }
+    .error-box b { color: #fecaca; }
+    .error-box code { font-family: 'Courier New', monospace; font-size: 11px; background: rgba(0,0,0,0.35); padding: 1px 5px; border-radius: 3px; color: #94a3b8; }
+    .error-box small { color: #64748b; font-size: 11px; }
 
     .footer { text-align: center; font-size: 9px; color: #1e293b; letter-spacing: 2px; padding: 12px; text-transform: uppercase; }
 
@@ -546,7 +549,7 @@
     // ── メイン取得処理 ────────────────────────────────────────────────────────
     async function fetchBriefing() {
       const apiKey = loadApiKey();
-      if (!apiKey) { showSettings(); return; }  // キー未設定ならモーダル表示
+      if (!apiKey) { showSettings(); return; }
 
       const btn = document.getElementById("fetch-btn");
       btn.disabled = true;
@@ -560,8 +563,15 @@
       const today = new Date().toLocaleDateString("ja-JP", {year:"numeric",month:"long",day:"numeric"});
       const userPrompt = `本日のイラン戦争・ホルムズ海峡情勢について、ドル円相場への影響を最優先にウェブ検索し、最新ニュースをCNN、BBC、Reuters、Al Jazeera、CNBC、Bloomberg、AP、AFP、WSJ、Financial Times、Lloyd's List、PressTV、IRNA、Tasnim、CSISから収集して報告してください。物流リスクスコアも実際のニュースから定量評価してください。今日の日付: ${today}`;
 
+      function showError(html) {
+        document.getElementById("error-area").innerHTML = `<div class="error-box">${html}</div>`;
+        document.getElementById("placeholder").style.display = "block";
+      }
+
+      // ① fetch() 自体の失敗（ネットワーク不通・CORSブロック）
+      let res;
       try {
-        const res = await fetch(ANTHROPIC_API, {
+        res = await fetch(ANTHROPIC_API, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -577,22 +587,73 @@
             messages: [{ role: "user", content: userPrompt }]
           })
         });
+      } catch (netErr) {
+        // TypeError: Failed to fetch → CORS または接続不可
+        showError(
+          `<b>🚫 接続エラー（CORS / ネットワーク）</b><br><br>` +
+          `ブラウザが Anthropic API への直接アクセスをブロックしました。<br><br>` +
+          `<b>確認事項：</b><br>` +
+          `① <b>https://</b> のURLからアクセスしているか確認（<code>file://</code> や <code>http://</code> は不可）<br>` +
+          `② Chrome / Edge を最新バージョンにアップデート<br>` +
+          `③ 広告ブロッカー等の拡張機能を一時無効化してリロード<br>` +
+          `④ インターネット接続を確認<br><br>` +
+          `<small>エラー詳細: ${netErr.message}</small>`
+        );
+        btn.disabled = false;
+        btn.innerHTML = "📡 最新ブリーフィングを取得";
+        return;
+      }
 
-        if (res.status === 401) throw new Error("APIキーが無効です。⚙️ から再設定してください。");
-        if (!res.ok) throw new Error(`APIエラー: ${res.status}`);
+      // ② HTTPステータスエラー・レスポンス処理
+      try {
+        if (res.status === 400) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(
+            `<b>🔴 リクエストエラー (400)</b><br>` +
+            `APIへのリクエスト形式が不正です。<br>` +
+            `<small>${body?.error?.message || "詳細不明"}</small>`
+          );
+        }
+        if (res.status === 401) throw new Error(
+          `<b>🔑 認証エラー (401) — APIキーが無効</b><br>` +
+          `キーが間違っているか期限切れです。<br>` +
+          `右上 ⚙️ ボタンから正しいキーを再設定してください。`
+        );
+        if (res.status === 403) throw new Error(
+          `<b>🚫 アクセス拒否 (403)</b><br>` +
+          `このキーは <code>web_search</code> 機能を使用できない可能性があります。<br>` +
+          `Anthropic Console でプラン・権限を確認してください。`
+        );
+        if (res.status === 429) throw new Error(
+          `<b>⏳ レート制限超過 (429)</b><br>` +
+          `APIの利用上限に達しました。1〜2分後に再試行してください。`
+        );
+        if (res.status === 529) throw new Error(
+          `<b>🔧 Anthropicサーバー混雑 (529)</b><br>` +
+          `サーバーが過負荷状態です。数分後に再試行してください。`
+        );
+        if (res.status >= 500) throw new Error(
+          `<b>🔧 サーバーエラー (${res.status})</b><br>` +
+          `Anthropic 側で障害が発生しています。時間をおいて再試行してください。`
+        );
+        if (!res.ok) throw new Error(
+          `<b>⚠️ 予期しないエラー (${res.status})</b><br>` +
+          `再試行してください。`
+        );
 
         const raw = await res.json();
         const textBlocks = (raw.content || []).filter(b => b.type === "text").map(b => b.text).join("");
         const jsonMatch = textBlocks.match(/\{[\s\S]*\}/);
-        if (!jsonMatch) throw new Error("レスポンスのJSON解析に失敗しました");
+        if (!jsonMatch) throw new Error(
+          `<b>⚠️ JSON解析エラー</b><br>` +
+          `レスポンス形式が不正です。再度お試しください。`
+        );
         const data = JSON.parse(jsonMatch[0]);
         renderData(data);
         document.getElementById("last-fetched").textContent = "最終取得: " + new Date().toLocaleTimeString("ja-JP");
 
       } catch (e) {
-        document.getElementById("error-area").innerHTML =
-          `<div class="error-box">⚠️ ${e.message}<br><small>しばらく待ってから再度お試しください。</small></div>`;
-        document.getElementById("placeholder").style.display = "block";
+        showError(e.message);
       } finally {
         btn.disabled = false;
         btn.innerHTML = "📡 最新ブリーフィングを取得";

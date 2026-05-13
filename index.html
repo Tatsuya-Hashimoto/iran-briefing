@@ -193,7 +193,7 @@
 
     .error-box { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; color: #fca5a5; font-size: 13px; line-height: 1.8; }
     .error-box b { color: #fecaca; }
-    .error-box code { font-family: 'Courier New', monospace; font-size: 11px; background: rgba(0,0,0,0.35); padding: 1px 5px; border-radius: 3px; color: #94a3b8; }
+    .error-box code { font-family: 'Courier New', monospace; font-size: 11px; background: rgba(0,0,0,0.35); padding: 1px 5px; border-radius: 3px; color: #94a3b8; word-break: break-all; }
     .error-box small { color: #64748b; font-size: 11px; }
 
     .footer { text-align: center; font-size: 9px; color: #1e293b; letter-spacing: 2px; padding: 12px; text-transform: uppercase; }
@@ -546,6 +546,27 @@
       document.getElementById("lr-btn").classList.toggle("open");
     }
 
+    // ── JSON文字列値内の未エスケープ制御文字を修正するヘルパー ────────────────
+    // Claude がウェブ検索結果を文字列に含める際、改行・タブが未エスケープになる場合がある
+    function fixJsonStrings(str) {
+      let out = '', inStr = false, esc = false;
+      for (let i = 0; i < str.length; i++) {
+        const ch = str[i];
+        if (esc)               { out += ch; esc = false; continue; }
+        if (ch === '\\')       { out += ch; esc = true;  continue; }
+        if (ch === '"')        { out += ch; inStr = !inStr; continue; }
+        if (inStr) {
+          if      (ch === '\n') out += '\\n';
+          else if (ch === '\r') out += '\\r';
+          else if (ch === '\t') out += '\\t';
+          else                  out += ch;
+        } else {
+          out += ch;
+        }
+      }
+      return out;
+    }
+
     // ── メイン取得処理 ────────────────────────────────────────────────────────
     async function fetchBriefing() {
       const apiKey = loadApiKey();
@@ -589,7 +610,6 @@
           })
         });
       } catch (netErr) {
-        // TypeError: Failed to fetch → CORS または接続不可
         showError(
           `<b>🚫 接続エラー（CORS / ネットワーク）</b><br><br>` +
           `ブラウザが Anthropic API への直接アクセスをブロックしました。<br><br>` +
@@ -648,16 +668,53 @@
           `再試行してください。`
         );
 
+        // ── レスポンス本文の取得 ──────────────────────────────────────────────
         const raw = await res.json();
-        const textBlocks = (raw.content || []).filter(b => b.type === "text").map(b => b.text).join("");
-        const jsonMatch = textBlocks.match(/\{[\s\S]*\}/);
-        if (!jsonMatch) throw new Error(
-          `<b>⚠️ JSON解析エラー</b><br>` +
-          `レスポンス形式が不正です。再度お試しください。`
-        );
-        const data = JSON.parse(jsonMatch[0]);
+
+        // text ブロックのみ結合（web_search の tool_use / tool_result ブロックは除外）
+        const textContent = (raw.content || [])
+          .filter(b => b.type === "text")
+          .map(b => b.text)
+          .join("");
+
+        // JSON オブジェクトをテキストから抽出
+        const jsonMatch = textContent.match(/\{[\s\S]*\}/);
+        if (!jsonMatch) {
+          throw new Error(
+            `<b>⚠️ JSON未検出</b><br>` +
+            `レスポンスにJSONが含まれていません。再試行してください。<br>` +
+            `<small>stop_reason: ${raw.stop_reason || "不明"} ／ ` +
+            `blocks: ${(raw.content || []).map(b => b.type).join(", ")}</small>`
+          );
+        }
+
+        // JSON パース — 2段階フォールバック
+        let data;
+        try {
+          // 試行①: そのままパース
+          data = JSON.parse(jsonMatch[0]);
+        } catch (e1) {
+          // 試行②: 文字列値内の未エスケープ制御文字（改行・タブ等）を修正してパース
+          try {
+            data = JSON.parse(fixJsonStrings(jsonMatch[0]));
+          } catch (e2) {
+            // 両方失敗 → エラー箇所のコンテキストを表示
+            const pos = Number(e1.message.match(/position (\d+)/)?.[1] ?? 0);
+            const ctx = jsonMatch[0]
+              .slice(Math.max(0, pos - 40), pos + 50)
+              .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            throw new Error(
+              `<b>⚠️ JSON解析エラー</b><br>` +
+              `${e1.message}<br>` +
+              `エラー付近: <code>…${ctx}…</code><br>` +
+              `再試行してください。`
+            );
+          }
+        }
+
         renderData(data);
-        document.getElementById("last-fetched").textContent = "最終取得: " + new Date().toLocaleTimeString("ja-JP");
+        document.getElementById("last-fetched").textContent =
+          "最終取得: " + new Date().toLocaleTimeString("ja-JP");
 
       } catch (e) {
         showError(e.message);

@@ -578,6 +578,7 @@
             "x-api-key": apiKey,
             "anthropic-version": "2023-06-01",
             "anthropic-dangerous-direct-browser-access": "true",
+            "anthropic-beta": "web-search-2025-03-05",
           },
           body: JSON.stringify({
             model: "claude-haiku-4-5-20251001",
@@ -623,6 +624,12 @@
           `<b>🚫 アクセス拒否 (403)</b><br>` +
           `このキーは <code>web_search</code> 機能を使用できない可能性があります。<br>` +
           `Anthropic Console でプラン・権限を確認してください。`
+        );
+        if (res.status === 404) throw new Error(
+          `<b>🔍 リソースが見つかりません (404)</b><br>` +
+          `モデルIDが無効か、<code>web_search_20250305</code> ツールへのアクセス権がありません。<br>` +
+          `Anthropic Console でモデルへのアクセス権を確認してください。<br>` +
+          `<small>model: claude-haiku-4-5-20251001</small>`
         );
         if (res.status === 429) throw new Error(
           `<b>⏳ レート制限超過 (429)</b><br>` +
@@ -686,13 +693,11 @@
       }
     }
 
-    // ── 起動処理（スクリプト末尾で即時実行 — loadイベント待ち不要）──────────
-    // ①キー未設定なら即モーダル表示
+    // ── 起動処理 ──────────────────────────────────────────────────────────────
     if (!loadApiKey()) {
       showSettings();
     }
 
-    // ② Service Worker 登録（バックグラウンド）
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')

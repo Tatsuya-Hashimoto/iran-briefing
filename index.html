@@ -547,7 +547,6 @@
     }
 
     // ── JSON文字列値内の未エスケープ制御文字を修正するヘルパー ────────────────
-    // Claude がウェブ検索結果を文字列に含める際、改行・タブが未エスケープになる場合がある
     function fixJsonStrings(str) {
       let out = '', inStr = false, esc = false;
       for (let i = 0; i < str.length; i++) {
@@ -671,11 +670,17 @@
         // ── レスポンス本文の取得 ──────────────────────────────────────────────
         const raw = await res.json();
 
-        // text ブロックのみ結合（web_search の tool_use / tool_result ブロックは除外）
-        const textContent = (raw.content || [])
-          .filter(b => b.type === "text")
-          .map(b => b.text)
-          .join("");
+        // content[0].text からテキストを取り出す
+        if (!raw.content || !raw.content[0] || !raw.content[0].text) {
+          throw new Error(
+            `<b>⚠️ レスポンス形式が不正</b><br>` +
+            `APIレスポンスにtextコンテンツが含まれていません。再試行してください。<br>` +
+            `<small>stop_reason: ${raw.stop_reason || "不明"} ／ ` +
+            `blocks: ${(raw.content || []).map(b => b.type).join(", ")}</small>`
+          );
+        }
+
+        const textContent = raw.content[0].text;
 
         // JSON オブジェクトをテキストから抽出
         const jsonMatch = textContent.match(/\{[\s\S]*\}/);
@@ -684,7 +689,7 @@
             `<b>⚠️ JSON未検出</b><br>` +
             `レスポンスにJSONが含まれていません。再試行してください。<br>` +
             `<small>stop_reason: ${raw.stop_reason || "不明"} ／ ` +
-            `blocks: ${(raw.content || []).map(b => b.type).join(", ")}</small>`
+            `text preview: ${textContent.slice(0, 100)}</small>`
           );
         }
 
